@@ -10,10 +10,8 @@ public class Map
         this.shiftR = shiftR;
         this.shiftQ = shiftQ;
     }
-    
+
     public GameObject[,] grid;
     private int shiftR;
     private int shiftQ;
-    
 }
-

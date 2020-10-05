@@ -1,63 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
-public class CharacterMovement : MonoBehaviour
+namespace code
 {
-    private const float PositionShiftX = 1.5f;
-    private const float PositionShiftZ = 0.8660254f; // sqrt(3) / 2
-
-    // Start is called before the first frame update
-    void Start()
+    public class CharacterMovement : MonoBehaviour
     {
-        
-    }
+        public int startPositionR = 0;
+        public int startPositionQ = 0;
+        private int positionR;
+        private int positionQ;
+        private const float PositionShiftX = 1.5f;
+        private const float PositionShiftZ = 0.8660254f; // sqrt(3) / 2
 
-    // Update is called once per frame
-    void Update()
-    {
-        MoveOnKeyboardInput();
-    }
-
-    private void MoveOnKeyboardInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
+        // Start is called before the first frame update
+        void Start()
         {
-            MoveToAdjacentHex(-1, 1);
+            SetSrartPositionRQ();
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
+        // Update is called once per frame
+        void Update()
         {
-            MoveToAdjacentHex(0, 2);
+            MoveOnKeyboardInput();
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        private void SetSrartPositionRQ()
         {
-            MoveToAdjacentHex(-1, -1);
+            this.transform.Translate(new Vector3(startPositionR * PositionShiftX, 0,
+                startPositionR * PositionShiftZ + startPositionQ * PositionShiftZ * 2));
+            positionR = startPositionR;
+            positionQ = startPositionQ;
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        private void MoveOnKeyboardInput()
         {
-            MoveToAdjacentHex(0, -2);
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                MoveToAdjacentHex(-1, 1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                MoveToAdjacentHex(0, 2);
+            }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                MoveToAdjacentHex(-1, -1);
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                MoveToAdjacentHex(0, -2);
+            }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                MoveToAdjacentHex(1, -1);
+                EventManager.TriggerEvent(Events.OnGenerateMapEvent);
+            }
+
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                MoveToAdjacentHex(1, 1);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        private void MoveToAdjacentHex(int hexesX, int hexesZ)
         {
-            MoveToAdjacentHex(1, -1);
-            EventManager.TriggerEvent(Events.OnGenerateMapEvent);
+            positionR += hexesX;
+            positionQ += hexesZ;
+            this.transform.Translate(new Vector3(positionR * PositionShiftX, 0,
+                positionR * PositionShiftZ + positionQ * PositionShiftZ * 2));
         }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            MoveToAdjacentHex(1, 1);
-        }
-    }
-
-    private void MoveToAdjacentHex(int hexesX, int hexesZ)
-    {
-        var newX = PositionShiftX * hexesX; 
-        var newZ = PositionShiftZ * hexesZ;
-        this.transform.Translate(new Vector3(newX, 0, newZ));
     }
 }
